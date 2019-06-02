@@ -1,12 +1,27 @@
 import hashlib
+import re
 
 class SpellChecker:
     def __init__(self):
         self.__filter_size = 100000000
-        # Initialize filter will all 0/False
+        # Filter will all 0/False
         self.__filter = [False] * self.__filter_size
-        # Initilize a list of hash functions
+        # A list of indepedent hash functions
         self.__hash_functions = [hashlib.md5, hashlib.sha1, hashlib.sha256]
+
+    def spell_check(self, content):
+        typo_list = []
+        if not isinstance(content, str):
+            print('Invalid content.')
+            return typo_list
+        
+        words = re.findall(r"[\w']+", content)
+
+        for w in words:
+            if not self.word_exists(w.lower()) and not w.isdigit():
+                typo_list.append(w)
+        
+        return typo_list
 
 
     def reset(self, filter_size):
